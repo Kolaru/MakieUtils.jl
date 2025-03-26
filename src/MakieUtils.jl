@@ -22,11 +22,11 @@ export save_gl_transparent, save_cairo_transparent
 include("tree_layout.jl")
 export TreeLayout, Layout
 
-export palette, rm_str, Diamond3, side
+export palette, @sans_str, Diamond3, side
 
 const palette = Makie.DEFAULT_PALETTES.color[]
 
-macro rm_str(tex)
+macro sans_str(tex)
     return L"\fontfamily{TeXGyreHeros}%$tex"
 end
 
