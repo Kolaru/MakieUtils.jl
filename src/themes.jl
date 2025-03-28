@@ -1,4 +1,16 @@
-## Themes
+# Colormap used by Till
+till_anchors = [
+    RGB(0.5, 1, 1),
+    RGB(0, 0, 1),
+    RGB(1, 0, 0),
+    RGB(1, 1, 0)
+]
+till_colormap = ColorScheme(vcat(
+    range(till_anchors[1], till_anchors[2] ; length = 300),
+    range(till_anchors[2], till_anchors[3] ; length = 400),
+    range(till_anchors[3], till_anchors[4] ; length = 300)
+))
+
 # For Science according to
 # https://www.science.org/do/10.5555/page.2385607/full/author_figure_prep_guide_2022-1700144203893.pdf
 

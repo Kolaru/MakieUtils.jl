@@ -1,7 +1,9 @@
 module MakieUtils
 
-using Makie
+using Colors
+using ColorSchemes
 using LaTeXStrings
+using Makie
 
 
 include("blocks.jl")
@@ -14,7 +16,7 @@ include("rendering.jl")
 export out_backend!
 
 include("themes.jl")
-export science_theme, thesis_theme
+export science_theme, thesis_theme, till_colormap
 
 include("transparency.jl")
 export save_gl_transparent, save_cairo_transparent
