@@ -1,4 +1,3 @@
-
 function render_plot(plot!, bbox ; scalefactor = 5, backend = GLMakie)
     fig = Figure(;
         size = bbox.widths * scalefactor,
@@ -9,9 +8,8 @@ function render_plot(plot!, bbox ; scalefactor = 5, backend = GLMakie)
     return rotr90(Makie.colorbuffer(fig ; backend))
 end
 
-function out_backend!(plot!, figpos ;
-        backend = GLMakie,
-        frontend = CairoMakie,
+function out_backend!(plot!, figpos, backend ;
+        frontend = Makie.current_backend(),
         scalefactor = 5,
         alignmode = Outside(),
         refit_observable = nothing,

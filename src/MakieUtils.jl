@@ -7,7 +7,7 @@ using Makie
 
 
 include("blocks.jl")
-export BareAxis, BareAxis3, boxed_layout
+export BareAxis, BareAxis3, boxed_layout, PanelLabel
 
 include("layouts.jl")
 export TitledFigure, OverflowLayout
