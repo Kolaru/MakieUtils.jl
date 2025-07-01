@@ -8,7 +8,9 @@ description and should be used to place the axes.
 
 Keyword arguments are passed to `Makie.Figure`.
 """
-function TitledFigure(title = nothing, description = nothing ; kwargs...)
+function TitledFigure(
+        title::Union{AbstractString, Nothing} = nothing,
+        description::Union{AbstractString, Nothing} = nothing ; kwargs...)
     fig = Figure(; kwargs...)
     k = 1
 
@@ -39,6 +41,40 @@ function TitledFigure(title = nothing, description = nothing ; kwargs...)
     return fig, layout
 end
 
+"""
+    TitledFigure(f!::Function, [title, description] ; file_types = ["png"], save_folder = nothing, kwargs...)
+
+Version of TitledFigure compatible with the `do`-syntax.
+
+For example:
+
+```julia
+fig = TitledFigure("A Great Figure") do layout
+    ax = Axis(layout[1, 1])
+    scatter!(ax, rand(123))
+end
+```
+
+The layout is passed to the function which can modify it.
+
+If both a `title` and a `save_folder` are given, then the figure is automatically
+saved in this folder with a normalized name.
+One file is created for each file type in `file_types` (which must be a list of 
+file extension understood by the active Makie backend).
+"""
+function TitledFigure(f!, title = nothing, description = nothing ; file_types = ["png"], save_folder = nothing, kwargs...)
+    fig, layout = TitledFigure(title, description ; kwargs...)
+    f!(layout)
+
+    if !isnothing(save_folder) && !isnothing(title)
+        filename = replace(lowercase(title), " " => "_")
+        for ext in file_types
+            save(joinpath(save_folder, "$filename.$ext"), fig)
+        end
+    end
+
+    return fig
+end
 
 """
     OverflowLayout(figpos, ncols ; kwargs...)
