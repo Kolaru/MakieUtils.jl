@@ -3,11 +3,19 @@ module MakieUtils
 using Colors
 using ColorSchemes
 using LaTeXStrings
+using NearestNeighbors
 using Makie
+using Random
 
 
 include("blocks.jl")
 export BareAxis, BareAxis3, boxed_layout, PanelLabel
+
+include("colormaps.jl")
+export transparent_colormap
+
+include("densityplot.jl")
+export scatter_density!
 
 include("layouts.jl")
 export TitledFigure, OverflowLayout

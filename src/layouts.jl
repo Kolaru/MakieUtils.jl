@@ -11,6 +11,7 @@ Keyword arguments are passed to `Makie.Figure`.
 function TitledFigure(
         title::Union{AbstractString, Nothing} = nothing,
         description::Union{AbstractString, Nothing} = nothing ; kwargs...)
+
     fig = Figure(; kwargs...)
     k = 1
 
@@ -62,7 +63,9 @@ saved in this folder with a normalized name.
 One file is created for each file type in `file_types` (which must be a list of 
 file extension understood by the active Makie backend).
 """
-function TitledFigure(f!, title = nothing, description = nothing ; file_types = ["png"], save_folder = nothing, kwargs...)
+function TitledFigure(f!, title = nothing, description = nothing ;
+        file_types = ["png"], save_folder = nothing, kwargs...)
+
     fig, layout = TitledFigure(title, description ; kwargs...)
     f!(layout)
 
