@@ -128,11 +128,12 @@ function boxed_layout(figpos ;
         padding = 5,
         cornerradius = 10,
         color = :black,
+        strokewidth = 1.0,
         zorder = -2,
         nrows = 1,
         ncols = 1,
         kwargs...)
-    box = Box(figpos ; cornerradius, color = backgroundcolor, strokecolor = color)
+    box = Box(figpos ; cornerradius, color = backgroundcolor, strokecolor = color, strokewidth)
     translate!(box.blockscene, 0, 0, zorder)
 
     return GridLayout(figpos, nrows, ncols ; alignmode = Outside(padding...), kwargs...)
