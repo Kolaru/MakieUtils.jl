@@ -1,16 +1,27 @@
+struct TitledFigure
+    title::String
+    description::String
+    fig::Figure
+    layout::GridLayout
+end
+
 """
     TitledFigure([title, description] ; kwargs...)
 
-Create a figure with an optional title and description. 
+Create a TitledFigure, with an optional title and description. 
 
-Return the figure and a layout, which does not contain the title and
-description and should be used to place the axes.
+It has a `layout` field where the content of the figure should be placed.
+The title and description are not included in this layout.
 
 Keyword arguments are passed to `Makie.Figure`.
+
+When a TitledFigure is saved using the `save` function,
+the filename is constructed from the title.
 """
 function TitledFigure(
         title::Union{AbstractString, Nothing} = nothing,
-        description::Union{AbstractString, Nothing} = nothing ; kwargs...)
+        description::Union{AbstractString, Nothing} = nothing ;
+        kwargs...)
 
     fig = Figure(; kwargs...)
     k = 1
@@ -25,6 +36,8 @@ function TitledFigure(
             halign = :left
         )
         k += 1
+    else
+        title = "untitled"
     end
 
     if !isnothing(description)
@@ -35,11 +48,11 @@ function TitledFigure(
             halign = :left
         )
         k += 1
+    else
+        description = ""
     end
 
-    layout = GridLayout(fig[k, 1])
-
-    return fig, layout
+    return TitledFigure(title, description, fig, GridLayout(fig[k, 1]))
 end
 
 """
@@ -57,27 +70,42 @@ end
 ```
 
 The layout is passed to the function which can modify it.
-
-If both a `title` and a `save_folder` are given, then the figure is automatically
-saved in this folder with a normalized name.
-One file is created for each file type in `file_types` (which must be a list of 
-file extension understood by the active Makie backend).
 """
-function TitledFigure(f!, title = nothing, description = nothing ;
-        file_types = ["png"], save_folder = nothing, kwargs...)
+function TitledFigure(
+        f!::Function,
+        title::Union{Nothing, AbstractString} = nothing,
+        description::Union{Nothing, AbstractString} = nothing ;
+        kwargs...)
 
-    fig, layout = TitledFigure(title, description ; kwargs...)
-    f!(layout)
-
-    if !isnothing(save_folder) && !isnothing(title)
-        filename = replace(lowercase(title), " " => "_")
-        for ext in file_types
-            save(joinpath(save_folder, "$filename.$ext"), fig)
-        end
-    end
-
-    return fig
+    figure = TitledFigure(title, description ; kwargs...)
+    f!(figure.layout)
+    resize_to_layout!(figure.fig)
+    return figure
 end
+
+"""
+    save(figure::TitledFigure, folder::String = "plots", extension::String = "png"))
+
+Save a TitledFigure.
+The filename is the title of the figure,
+lowercase and with spaces replaced by underscores.
+
+The figure is saved in `folder`,
+using the filetype corresponding to `extension`.
+"""
+function Makie.save(
+        figure::TitledFigure,
+        folder::String = "plots",
+        extension::String = "png")
+
+    mkpath(folder)
+    filename = replace(lowercase(figure.title), " " => "_")
+    path = joinpath(folder, "$filename.$extension")
+    save(path, figure.fig)
+    return path
+end
+
+Base.display(figure::TitledFigure) = display(figure.fig)
 
 """
     OverflowLayout(figpos, ncols ; kwargs...)
