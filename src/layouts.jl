@@ -94,14 +94,16 @@ The figure is saved in `folder`,
 using the filetype corresponding to `extension`.
 """
 function Makie.save(
-        figure::TitledFigure,
+        figure::TitledFigure ;
         folder::String = "plots",
-        extension::String = "png")
+        extension::String = "png",
+        backend = Makie.current_backend(),
+        kwargs...)
 
     mkpath(folder)
     filename = replace(lowercase(figure.title), " " => "_")
     path = joinpath(folder, "$filename.$extension")
-    save(path, figure.fig)
+    save(path, figure.fig ; backend, kwargs...)
     return path
 end
 
