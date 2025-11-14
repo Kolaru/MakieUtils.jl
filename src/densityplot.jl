@@ -37,3 +37,7 @@ function scatter_density!(ax, data::Matrix ;
         kwargs...
     )
 end
+
+function scatter_density!(ax, xx::AbstractVector, yy::AbstractVector, zz::AbstractVector ; kwargs...)
+    scatter_density!(ax, permutedims(hcat(xx, yy, zz)) ; kwargs...)
+end
