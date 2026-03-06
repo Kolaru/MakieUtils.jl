@@ -38,6 +38,31 @@ function scatter_density!(ax, data::Matrix ;
     )
 end
 
+function scatter_density!(ax, data::Observable ;
+        npoints = 1000,
+        bandwidth = 1, 
+        color = :black,
+        colormap = transparent_colormap(color),
+        kwargs...)
+
+    shown_data = @lift($data[:, shuffle(1:size($data, 2))[1:min(npoints, size($data, 2))]])
+    kdtree = @lift(KDTree($data))
+    density = @lift(inrangecount($kdtree, $shown_data, bandwidth))
+
+    scatter!(ax,
+        @lift($shown_data[1, :]),
+        @lift($shown_data[2, :]),
+        @lift($shown_data[3, :]) ;
+        color = density,
+        colormap,
+        kwargs...
+    )
+end
+
 function scatter_density!(ax, xx::AbstractVector, yy::AbstractVector, zz::AbstractVector ; kwargs...)
     scatter_density!(ax, permutedims(hcat(xx, yy, zz)) ; kwargs...)
+end
+
+function scatter_density!(ax, xx::Observable, yy::Observable, zz::Observable ; kwargs...)
+    scatter_density!(ax, @lift(permutedims(hcat($xx, $yy, $zz))) ; kwargs...)
 end
