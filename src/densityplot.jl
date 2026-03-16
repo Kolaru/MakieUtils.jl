@@ -19,45 +19,50 @@ This is useful in 3D, so that the low density regions do not hide the high densi
 `npoints` determine how many points of the data are plotted,
 while all of them are used for the density estimation.
 """
-function scatter_density!(ax, data::Matrix ;
-        npoints = min(1000, size(data, 2)),
-        bandwidth = 1, 
-        color = :black,
-        colormap = transparent_colormap(color),
-        kwargs...)
-
-    shown_data = data[:, shuffle(1:size(data, 2))[1:npoints]]
-    kdtree = KDTree(data)
-    density = inrangecount(kdtree, shown_data, bandwidth)
-
-    scatter!(ax,
-        eachrow(shown_data)... ;
-        color = density,
-        colormap,
-        kwargs...
-    )
-end
-
 function scatter_density!(ax, data::Observable ;
         npoints = 1000,
+        threshold = 0.1,
         bandwidth = 1, 
         color = :black,
         colormap = transparent_colormap(color),
         kwargs...)
 
-    shown_data = @lift($data[:, shuffle(1:size($data, 2))[1:min(npoints, size($data, 2))]])
-    kdtree = @lift(KDTree($data))
-    density = @lift(inrangecount($kdtree, $shown_data, bandwidth))
+    # shown_data = @lift($data[:, shuffle(1:size($data, 2))[1:min(npoints, size($data, 2))]])
+    # kdtree = @lift(KDTree($data))
+    # density = @lift(inrangecount($kdtree, $shown_data, bandwidth))
+
+    processed = lift(data) do dat
+        N = min(npoints, size(dat, 2))
+        selected = dat[:, shuffle(1:size(dat, 2))[1:N]]
+
+        kdtree = KDTree(dat)
+        density = inrangecount(kdtree, selected, bandwidth)
+        
+        mask = density ./ maximum(density) .< threshold
+        density[mask] .= 0
+
+        # selected = allowmissing(selected)
+        # selected[:, mask] .= missing
+
+        return (;
+            x = selected[1, :],
+            y = selected[2, :],
+            z = selected[3, :],
+            density
+        )
+    end
 
     scatter!(ax,
-        @lift($shown_data[1, :]),
-        @lift($shown_data[2, :]),
-        @lift($shown_data[3, :]) ;
-        color = density,
+        @lift($processed.x),
+        @lift($processed.y),
+        @lift($processed.z) ;
+        color = @lift($processed.density),
         colormap,
         kwargs...
     )
 end
+
+scatter_density!(ax, data::Matrix ; args...) = scatter_density!(ax, Observable(data) ; args...)
 
 function scatter_density!(ax, xx::AbstractVector, yy::AbstractVector, zz::AbstractVector ; kwargs...)
     scatter_density!(ax, permutedims(hcat(xx, yy, zz)) ; kwargs...)
