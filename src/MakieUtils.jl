@@ -5,6 +5,7 @@ using ColorSchemes
 using LaTeXStrings
 using NearestNeighbors
 using Makie
+using Missings
 using Random
 
 
@@ -22,6 +23,9 @@ export TitledFigure, OverflowLayout
 
 include("rendering.jl")
 export out_backend!
+
+include("statistics.jl")
+export banderror!
 
 include("themes.jl")
 export science_theme, thesis_theme, till_colormap
