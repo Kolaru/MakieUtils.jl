@@ -101,7 +101,7 @@ function Makie.save(
         kwargs...)
 
     mkpath(folder)
-    filename = replace(lowercase(figure.title), " " => "_")
+    filename = replace(lowercase(figure.title), " " => "_", "\n" => "_")
     path = joinpath(folder, "$filename.$extension")
     save(path, figure.fig ; backend, kwargs...)
     return path
