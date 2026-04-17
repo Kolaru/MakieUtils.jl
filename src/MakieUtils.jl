@@ -1,12 +1,15 @@
 module MakieUtils
 
+using AngleBetweenVectors
 using Colors
 using ColorSchemes
 using LaTeXStrings
+using LinearAlgebra
 using NearestNeighbors
 using Makie
 using Missings
 using Random
+using Rotations
 
 
 include("blocks.jl")
@@ -17,6 +20,9 @@ export transparent_colormap
 
 include("densityplot.jl")
 export scatter_density!
+
+include("geometry.jl")
+export draw_angle!
 
 include("layouts.jl")
 export TitledFigure, OverflowLayout
