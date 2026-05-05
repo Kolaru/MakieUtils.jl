@@ -11,6 +11,7 @@ function banderror!(ax, xx, yy, err ;
         band_kwargs = (;),
         double_error = false, 
         error_label = "1σ error",
+        marker = nothing,
         kwargs...)
 
     if double_error
@@ -36,4 +37,8 @@ function banderror!(ax, xx, yy, err ;
         band_kwargs...
     )
     lines!(ax, xx, yy ; color = :black, label = "Average", kwargs...)
+
+    if !isnothing(marker)
+        scatter!(ax, xx, yy ; color = :black, label = "Average", marker, kwargs...)
+    end
 end
