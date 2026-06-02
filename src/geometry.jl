@@ -22,7 +22,8 @@ function draw_angle!(ax, rA, r0, rB ;
         alpha = 0.3,
         tipsize = 5 * π/180,
         tipwidth = 1.3linewidth,
-        label = "")
+        label = "",
+        kwargs...)
 
     uA = rA - r0    
     uB = rB - r0
@@ -41,7 +42,8 @@ function draw_angle!(ax, rA, r0, rB ;
     lines!(ax, Point3f.(pts) ;
         color = strokecolor,
         linewidth,
-        label
+        label,
+        kwargs...
     )
 
     # Draw an arrow tip at the end of the angle
@@ -53,12 +55,14 @@ function draw_angle!(ax, rA, r0, rB ;
         minshaftlength = 0,
         maxshaftlength = 0,
         tipwidth = tipwidth,
-        overdraw = true
+        overdraw = true,
+        kwargs...
     )
 
     poly!(ax, Point3f.(vcat(pts, [r0 + uB, r0])) ;
         color,
         alpha,
-        label
+        label,
+        kwargs...
     )
 end
