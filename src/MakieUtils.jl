@@ -10,6 +10,8 @@ using Makie
 using Missings
 using Random
 using Rotations
+using Statistics
+using StatsBase
 
 
 include("blocks.jl")
@@ -19,7 +21,7 @@ include("colormaps.jl")
 export transparent_colormap
 
 include("densityplot.jl")
-export scatter_density!
+export silverman_bw, silverman_cellsize, scatter_density!, voxel_density!
 
 include("geometry.jl")
 export draw_angle!

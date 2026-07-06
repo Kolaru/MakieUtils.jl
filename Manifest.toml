@@ -2,7 +2,7 @@
 
 julia_version = "1.12.6"
 manifest_format = "2.0"
-project_hash = "534af2f83b40aeed9ac8a7beea89bcd2a85093bb"
+project_hash = "ff66bdcf10b8ca0e24f6fe0e7681f4e6166f0e74"
 
 [[deps.AbstractFFTs]]
 deps = ["LinearAlgebra"]
@@ -795,7 +795,7 @@ version = "0.24.9"
     DynamicQuantities = "06fc5a27-2a28-4c7c-a15d-362465fb6821"
 
 [[deps.MakieUtils]]
-deps = ["ColorSchemes", "Colors", "LaTeXStrings", "LinearAlgebra", "Makie", "Missings", "NearestNeighbors", "Random"]
+deps = ["AngleBetweenVectors", "ColorSchemes", "Colors", "LaTeXStrings", "LinearAlgebra", "Makie", "Missings", "NearestNeighbors", "Random", "Rotations", "Statistics"]
 path = "."
 uuid = "56ac5d9f-1d55-43ba-8dff-4a3b3598aed1"
 version = "0.1.0"
@@ -1259,9 +1259,9 @@ version = "1.8.0"
 
 [[deps.StatsBase]]
 deps = ["AliasTables", "DataAPI", "DataStructures", "IrrationalConstants", "LinearAlgebra", "LogExpFunctions", "Missings", "Printf", "Random", "SortingAlgorithms", "SparseArrays", "Statistics", "StatsAPI"]
-git-tree-sha1 = "aceda6f4e598d331548e04cc6b2124a6148138e3"
+git-tree-sha1 = "e4d7a1a0edc20af42689ea6f4f3587a2175d50ee"
 uuid = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
-version = "0.34.10"
+version = "0.34.12"
 
 [[deps.StatsFuns]]
 deps = ["HypergeometricFunctions", "IrrationalConstants", "LogExpFunctions", "Reexport", "Rmath", "SpecialFunctions"]

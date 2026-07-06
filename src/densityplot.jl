@@ -1,3 +1,6 @@
+silverman_bw(data) = 0.9 * min(std(data), iqr(data) / 1.34) * length(data)^(-1/5)
+silverman_cellsize(args...) = min(silverman_bw.(args)...)
+
 """
     scatter_density!(ax, data::Matrix ;
         npoints = 10_000, bandwidth = 1,
@@ -70,4 +73,48 @@ end
 
 function scatter_density!(ax, xx::Observable, yy::Observable, zz::Observable ; kwargs...)
     scatter_density!(ax, @lift(permutedims(hcat($xx, $yy, $zz))) ; kwargs...)
+end
+
+"""
+    voxel_density!(ax, xinterval, yinterval, zinterval, momenta ;
+        colormap = transparent_colormap(color), color = :black,
+        alpha = 0.5, thres = 0.3, cellsize = 20,
+        bandwidth = 2silverman_bw(momenta[2, :]), kwargs...)
+
+Plot a 3D density as a set of semi-transparent voxels of size `cellsize`.
+
+Perform a KDE estimate with the given `bandwidth` and determine
+thec color each voxel accordingly.
+
+If the density is smaller than `thres`,
+then the voxel is not plotted at all.
+
+All other keyword parameters are propagated to `Makie.voxel`.
+"""
+function voxel_density!(ax, xinterval, yinterval, zinterval, momenta ;
+        color = :black, alpha = 0.5, thres = 0.3, cellsize = 20, colormap = transparent_colormap(color),
+        bandwidth = 2silverman_bw(momenta[2, :]),
+        kwargs...)
+
+    xgrid = range(xinterval.left, xinterval.right ; step = cellsize)
+    ygrid = range(yinterval.left, yinterval.right ; step = cellsize)
+    zgrid = range(zinterval.left, zinterval.right ; step = cellsize)
+
+    points = [[x, y, z] for x in xgrid, y in ygrid, z in zgrid]
+
+    kdtree = KDTree(momenta)
+    density = convert.(Float64, inrangecount.(Ref(kdtree), points, bandwidth))
+    density ./= maximum(density)
+
+    voxels!(ax,
+        xinterval,
+        yinterval,
+        zinterval,
+        density ;
+        alpha,
+        colormap,
+        transparency = true,
+        is_air = <(thres),
+        kwargs...
+    )
 end
