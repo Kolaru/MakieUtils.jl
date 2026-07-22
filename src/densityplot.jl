@@ -96,6 +96,7 @@ function voxel_density!(ax, xinterval, yinterval, zinterval, momenta ;
         bandwidth = 2silverman_bw(momenta[2, :]),
         kwargs...)
 
+    cellsize = convert(Float64, cellsize)
     xgrid = range(xinterval.left, xinterval.right ; step = cellsize)
     ygrid = range(yinterval.left, yinterval.right ; step = cellsize)
     zgrid = range(zinterval.left, zinterval.right ; step = cellsize)
