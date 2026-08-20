@@ -1,4 +1,4 @@
-silverman_bw(data) = 0.9 * min(std(data), iqr(data) / 1.34) * length(data)^(-1/5)
+silverman_bw(data) = max(eps(), 0.9 * min(std(data), iqr(data) / 1.34) * length(data)^(-1/5))
 silverman_cellsize(args...) = min(silverman_bw.(args)...)
 
 """
@@ -115,7 +115,7 @@ function voxel_density!(ax, xinterval, yinterval, zinterval, momenta ;
         alpha,
         colormap,
         transparency = true,
-        is_air = <(thres),
+        is_air = <=(thres),
         kwargs...
     )
 end
