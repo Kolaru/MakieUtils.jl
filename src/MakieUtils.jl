@@ -3,6 +3,7 @@ module MakieUtils
 using AngleBetweenVectors
 using Colors
 using ColorSchemes
+using FHist
 using LaTeXStrings
 using LinearAlgebra
 using NearestNeighbors
@@ -21,7 +22,7 @@ include("colormaps.jl")
 export transparent_colormap
 
 include("densityplot.jl")
-export silverman_bw, silverman_cellsize, scatter_density!, voxel_density!
+export silverman_bw, silverman_cellsize, scatter_density!, voxel_density!, voxel_histogram!
 
 include("geometry.jl")
 export draw_angle!

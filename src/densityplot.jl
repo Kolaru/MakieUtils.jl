@@ -119,3 +119,38 @@ function voxel_density!(ax, xinterval, yinterval, zinterval, momenta ;
         kwargs...
     )
 end
+
+function minsized_range(lo, hi ; minsize, kwargs...)
+    @assert hi >= lo
+    if hi - lo < minsize
+        mid = (hi + lo)/2
+        hi = mid + minsize / 2
+        lo = mid - minsize / 2
+    end
+    return range(lo, hi ; kwargs...)
+end
+
+function voxel_histogram!(ax, momenta ;
+        color = :black, alpha = 0.5, thres = 0.0, cellsize = 20, colormap = transparent_colormap(color),
+        kwargs...)
+
+    xx, yy, zz = eachrow(momenta) 
+    xedges = minsized_range(extrema(xx)... ; minsize = cellsize, step = cellsize)
+    yedges = minsized_range(extrema(yy)... ; minsize = cellsize, step = cellsize)
+    zedges = minsized_range(extrema(zz)... ; minsize = cellsize, step = cellsize)
+
+    h = Hist3D((xx, yy, zz) ; binedges = (xedges, yedges, zedges))
+
+    v = voxels!(ax,
+        extrema(xedges),
+        extrema(yedges),
+        extrema(zedges),
+        bincounts(h) ;
+        alpha,
+        colormap,
+        transparency = true,
+        is_air = <=(thres),
+        kwargs...
+    )
+    return v, h
+end
