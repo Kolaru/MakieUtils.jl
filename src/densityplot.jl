@@ -130,14 +130,22 @@ function minsized_range(lo, hi ; minsize, kwargs...)
     return range(lo, hi ; kwargs...)
 end
 
-function voxel_histogram!(ax, momenta ;
+function voxel_histogram!(ax, momenta ; kwargs...)
+    xx, yy, zz = eachrow(momenta) 
+    voxel_histogram!(ax, xx, yy, zz ; kwargs...)
+end
+
+function voxel_histogram!(ax, xx, yy, zz ;
         color = :black, alpha = 0.5, thres = 0.0, cellsize = 20, colormap = transparent_colormap(color),
         kwargs...)
 
-    xx, yy, zz = eachrow(momenta) 
-    xedges = minsized_range(extrema(xx)... ; minsize = cellsize, step = cellsize)
-    yedges = minsized_range(extrema(yy)... ; minsize = cellsize, step = cellsize)
-    zedges = minsized_range(extrema(zz)... ; minsize = cellsize, step = cellsize)
+    if length(cellsize) == 1
+        cellsize = [cellsize, cellsize, cellsize]
+    end
+
+    xedges = minsized_range(extrema(xx)... ; minsize = cellsize[1], step = cellsize[1])
+    yedges = minsized_range(extrema(yy)... ; minsize = cellsize[2], step = cellsize[2])
+    zedges = minsized_range(extrema(zz)... ; minsize = cellsize[3], step = cellsize[3])
 
     h = Hist3D((xx, yy, zz) ; binedges = (xedges, yedges, zedges))
 
